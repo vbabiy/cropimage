@@ -86,6 +86,14 @@ public class MainActivity extends Activity {
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_CANCELED && requestCode == CROP_IMAGE) {
+			// Delete image
+			File img = new File(getImageUri().getPath());
+			if (img != null && img.exists() && img.canWrite()) {
+				img.delete();
+			}
+		}
+		
 		if (resultCode != RESULT_OK) {
 			return;
 		}
@@ -139,8 +147,10 @@ public class MainActivity extends Activity {
 			case CROP_IMAGE:
 				ImageView v = (ImageView) findViewById(R.id.result_image);
 	            Bitmap resultImage = BitmapFactory.decodeFile(getImageUri().getPath());
-	            v.setImageBitmap(resultImage);
-	            v.setVisibility(View.VISIBLE);
+	            if (resultImage != null) {
+	            	v.setImageBitmap(resultImage);
+		            v.setVisibility(View.VISIBLE);
+	            }
 		}
 		
 	}
