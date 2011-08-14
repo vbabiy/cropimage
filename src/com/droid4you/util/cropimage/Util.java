@@ -18,31 +18,24 @@ package com.droid4you.util.cropimage;
 
 
 
+import java.io.Closeable;
+
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.FileDescriptor;
-import java.io.IOException;
-
 /**
  * Collection of utility functions used in this package.
  */
 public class Util {
-    private static final String TAG = "db.Util";
 
     private static OnClickListener sNullOnClickListener;
 
@@ -256,25 +249,6 @@ public class Util {
             c.close();
         } catch (Throwable t) {
             // do nothing
-        }
-    }
-
-    /**
-     * Make a bitmap from a given Uri.
-     *
-     * @param uri
-     */
-   
-
-    
-
-    
-    private static ParcelFileDescriptor makeInputStream(
-            Uri uri, ContentResolver cr) {
-        try {
-            return cr.openFileDescriptor(uri, "r");
-        } catch (IOException ex) {
-            return null;
         }
     }
 

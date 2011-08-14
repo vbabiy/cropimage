@@ -23,7 +23,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 
@@ -277,7 +276,6 @@ abstract class ImageViewTouchBase extends ImageView {
 
         float w = bitmap.getWidth();
         float h = bitmap.getHeight();
-        int rotation = bitmap.getRotation();
         matrix.reset();
 
         // We limit up-scaling to 2x otherwise the result may look bad if it's

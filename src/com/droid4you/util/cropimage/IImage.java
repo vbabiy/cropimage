@@ -16,11 +16,10 @@
 
 package com.droid4you.util.cropimage;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-
 import java.io.InputStream;
+
+import android.graphics.Bitmap;
+import android.net.Uri;
 
 /**
  * The interface of all images used in gallery.
