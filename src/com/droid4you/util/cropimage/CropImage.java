@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -40,6 +39,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.media.ExifInterface;
 import android.media.FaceDetector;
 import android.net.Uri;
 import android.os.Bundle;
@@ -92,7 +92,18 @@ public class CropImage extends MonitoredActivity {
 	private IImage mImage;
 
 	private String mImagePath;
+	
+	private static boolean exifAvailable;
 
+	static {
+		try {
+			ExifWrapper.checkAvailable();
+			exifAvailable = true;
+		} catch (Throwable t) {
+			exifAvailable = false;
+		}
+	}
+	
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -174,7 +185,35 @@ public class CropImage extends MonitoredActivity {
 				mRunFaceDetection.run();
 				}
 				});
+		
+		if (exifAvailable) {
+			rotateToExifInfo();
+		}
+		
 		startFaceDetection();
+	}
+	
+	private void rotateToExifInfo() {
+		int degrees = 0;
+		ExifWrapper exif = new ExifWrapper(mImagePath);
+		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+		switch (orientation) {
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				degrees = 90;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				degrees = 180;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				degrees = 270;
+				break;
+		}
+		
+		if (degrees > 0) {
+			mBitmap = Util.rotateImage(mBitmap, degrees);
+			RotateBitmap rotateBitmap = new RotateBitmap(mBitmap);
+			mImageView.setImageRotateBitmapResetBase(rotateBitmap, true);
+		}
 	}
 
 	private Uri getImageUri(String path) {
@@ -402,7 +441,6 @@ public class CropImage extends MonitoredActivity {
 
 
 	Runnable mRunFaceDetection = new Runnable() {
-		@SuppressWarnings("hiding")
 		float mScale = 1F;
 		Matrix mImageMatrix;
 		FaceDetector.Face[] mFaces = new FaceDetector.Face[3];
